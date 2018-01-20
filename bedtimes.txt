@@ -1,4 +1,7 @@
+# Example bedtime file
 # Week starts on monday since I'm swedish
+# Just a single entry per day.
+# No more, no less.
 21:45
 21:45
 21:45
