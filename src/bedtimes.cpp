@@ -69,7 +69,7 @@ bool IsDigit(char Char)
     return Char >= '0' && Char <= '9';
 }
 
-time_error IsValidTime(const char *Time)
+time_error ValidateTime(const char *Time)
 {
     if (Time[0] > '2')                   return TimeError_Hours;
     if (Time[0] == '2' && Time[1] > '3') return TimeError_Hours;
@@ -152,7 +152,7 @@ bool ParseBedtimes(const char *Bedtimes, char *Result[])
                 Time[i] = Parser.Current;
             }
 
-            time_error Error = IsValidTime(Time);
+            time_error Error = ValidateTime(Time);
             if (Error == TimeError_Hours)
             {
                 ShowError("[ERROR::Parsing] Entered hour is invalid, has to be between 00-23. Row: %d\n", Parser.Line);
