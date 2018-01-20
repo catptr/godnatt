@@ -40,7 +40,12 @@ if %RELEASE_MODE% equ 0 ( rem debug
     echo Building release...
 )
 
-set WARNINGS= /Wall /WX /wd4514 /wd4710 /wd4711
+set WARNINGS= /Wall /WX /wd4514 /wd4710 /wd4711 /wd4820
+
+if %RELEASE_MODE% equ 0 ( rem debug
+    :: Unreferenced formal parameter and local variables
+    set WARNINGS=%WARNINGS% /wd4100 /wd4101 /wd4189
+)
 
 if not exist .\bin mkdir .\bin
 pushd .\bin
