@@ -6,17 +6,7 @@
 
 #define Unused(x) (void)(x)
 
-enum weekday
-{
-    Weekday_Monday,
-    Weekday_Tuesday,
-    Weekday_Wednesday,
-    Weekday_Thursday,
-    Weekday_Friday,
-    Weekday_Saturday,
-    Weekday_Sunday,
-    Weekday_Count,
-};
+const int WeekdayCount = 7;
 
 void ShowError(const char *Format, ...)
 {
@@ -142,16 +132,16 @@ bool ParseBedtimes(const char *Bedtimes, char *Result[])
             // We expected a newline but didn't get any.
             // This is an error.
             ShowError("[ERROR::Parsing] Some garbage on the same row as a time entry. Remove it. Row: %d\n", Parser.Line);
-            FreeStringsInArray(Result, Weekday_Count);
+            FreeStringsInArray(Result, WeekdayCount);
             return false;
         }
 
         if (IsDigit(Char))
         {
-            if (CurrentDay == Weekday_Count)
+            if (CurrentDay == WeekdayCount)
             {
                 ShowError("[ERROR::Parsing] You have entered more than seven times. How long is your week? Row: %d\n", Parser.Line);
-                FreeStringsInArray(Result, Weekday_Count);
+                FreeStringsInArray(Result, WeekdayCount);
                 return false;
             }
 
@@ -166,14 +156,14 @@ bool ParseBedtimes(const char *Bedtimes, char *Result[])
                     if (Parser.Current != ':')
                     {
                         ShowError("[ERROR::Parsing] Valid times follow the format \"HH:MM\" but your entry lacked a colon in the right place. Row: %d\n", Parser.Line);
-                        FreeStringsInArray(Result, Weekday_Count);
+                        FreeStringsInArray(Result, WeekdayCount);
                         return false;
                     }
                 }
                 else if (!IsDigit(Parser.Current))
                 {
                     ShowError("[ERROR::Parsing] Valid times follow the format \"HH:MM\" but character that should've been a digit wasn't. Row: %d\n", Parser.Line);
-                    FreeStringsInArray(Result, Weekday_Count);
+                    FreeStringsInArray(Result, WeekdayCount);
                     return false;
                 }
                 
@@ -201,10 +191,10 @@ bool ParseBedtimes(const char *Bedtimes, char *Result[])
         }
     }
 
-    if (CurrentDay < Weekday_Count)
+    if (CurrentDay < WeekdayCount)
     {
         ShowError("[ERROR::Parsing] You haven't entered times for all days of the week.\n");
-        FreeStringsInArray(Result, Weekday_Count);
+        FreeStringsInArray(Result, WeekdayCount);
         return false;
     }
 
@@ -218,7 +208,7 @@ int main(int argc, char *argv[])
 
     char *Bedtimes = ReadEntireFile("bedtimes.txt");
     
-    char *ParsedTimes[Weekday_Count] = {};
+    char *ParsedTimes[WeekdayCount] = {};
     bool succeeded = ParseBedtimes(Bedtimes, ParsedTimes);
     if (succeeded)
     {
