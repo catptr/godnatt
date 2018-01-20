@@ -1,5 +1,12 @@
 #include "bedtimes.h"
 
+enum time_error
+{
+    TimeError_None,
+    TimeError_Hours,
+    TimeError_Minutes,
+};
+
 char *ReadEntireFile(const char *Path)
 {
     FILE *File = nullptr;
@@ -60,6 +67,16 @@ bool IsNewline(char Char)
 bool IsDigit(char Char)
 {
     return Char >= '0' && Char <= '9';
+}
+
+time_error IsValidTime(const char *Time)
+{
+    if (Time[0] > '2')                   return TimeError_Hours;
+    if (Time[0] == '2' && Time[1] > '3') return TimeError_Hours;
+
+    if (Time[3] > '5') return TimeError_Minutes;
+
+    return TimeError_None;
 }
 
 bool ParseBedtimes(const char *Bedtimes, char *Result[])
@@ -133,6 +150,20 @@ bool ParseBedtimes(const char *Bedtimes, char *Result[])
                 
 
                 Time[i] = Parser.Current;
+            }
+
+            time_error Error = IsValidTime(Time);
+            if (Error == TimeError_Hours)
+            {
+                ShowError("[ERROR::Parsing] Entered hour is invalid, has to be between 00-23. Row: %d\n", Parser.Line);
+                FreeStringsInArray(Result, WeekdayCount);
+                return false;
+            }
+            else if (Error == TimeError_Minutes)
+            {
+                ShowError("[ERROR::Parsing] Entered minute is invalid, has to be between 00-59. Row: %d\n", Parser.Line);
+                FreeStringsInArray(Result, WeekdayCount);
+                return false;
             }
 
             // A bit hacky... but because of the way we have our our outer loop setup
