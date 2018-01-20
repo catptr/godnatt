@@ -1,0 +1,1 @@
+int WatchFile(const char *Path);
