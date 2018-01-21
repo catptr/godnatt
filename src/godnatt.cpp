@@ -17,6 +17,10 @@ int main(int argc, char *argv[])
                 return 2;
             }
         }
+        else if (strcmp(argv[1], "--notify") == 0)
+        {
+            ShowError("Computer will get locked in 5 minutes.\nSave your work so you don't lose any!");
+        }
     }
     else
     {
