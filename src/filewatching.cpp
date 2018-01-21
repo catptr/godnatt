@@ -90,6 +90,18 @@ int WatchFile(const char *Path)
                 {
                     printf("%s\n", ParsedTimes[i]);
                 }
+
+                /*
+                TaskScheduler taskScheduler;
+                if (taskScheduler.did_succeed())
+                {
+                    //taskScheduler->add_weekly_trigger();
+                }
+                else
+                {
+                    return 3;
+                }
+                */
             }
 
             FreeStringsInArray(ParsedTimes, WeekdayCount);

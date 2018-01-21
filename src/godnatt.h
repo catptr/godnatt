@@ -8,4 +8,6 @@
 #include <assert.h>
 
 #include "common.h"
+#include "taskscheduler.h"
+#include "filewatching.h"
 #include "bedtimes.h"
