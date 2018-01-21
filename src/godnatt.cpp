@@ -23,4 +23,6 @@ int main(int argc, char *argv[])
         const char *Path = "G:\\godnatt\\bedtimes.txt";
         return WatchFile(Path);
     }
+
+    return 0;
 }
