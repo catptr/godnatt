@@ -117,6 +117,7 @@ HRESULT TaskScheduler::initialize()
 // Can this be done in a concise way with shifts instead?
 // If not then this is probably the best
 short weekdayToFlag[7] = { 2, 4, 8, 16, 32, 64, 1 };
+const char *weekdayToString[7] = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
 
 void TaskScheduler::add_weekly_trigger(const char *start, short day, const char *arguments)
 {
@@ -124,10 +125,10 @@ void TaskScheduler::add_weekly_trigger(const char *start, short day, const char 
     assert(this->did_succeed());
     assert(day >= 0 && day <= 6);
 
-    day = weekdayToFlag[day];
-
-    const char *taskName = "Weekly Trigger Task";
+    const char *taskName = weekdayToString[day];
     const char *executablePath = "G:\\godnatt\\bin\\godnatt.exe";
+
+    day = weekdayToFlag[day];
 
     // Delete if already exists
     this->godnattFolder->DeleteTask(_bstr_t(taskName), 0);

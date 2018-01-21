@@ -20,23 +20,9 @@ int main(int argc, char *argv[])
     }
     else
     {
-        TaskScheduler taskScheduler;
-        if (taskScheduler.did_succeed())
-        {
-            taskScheduler.add_weekly_trigger("2018-01-21T15:31:30", 6, "--lock");
-
-            if (taskScheduler.did_succeed())
-            {
-                return 0;
-            }
-        }
-
-        return 3;
-        /*
         // Default to watch bedtimes file for changes
         const char *Path = "G:\\godnatt\\bedtimes.txt";
         return WatchFile(Path);
-        */
     }
 
     return 0;

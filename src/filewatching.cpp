@@ -20,6 +20,23 @@ bool FileTimeEquals(FILETIME a, FILETIME b)
     return true;
 }
 
+const int DateTimeStringNumBytes = 20;
+
+bool date_time_string(const char *bedtime, char result[])
+{
+    time_t t = time(0);
+
+    struct tm now;
+    if (localtime_s(&now, &t) != 0)
+    {
+        return false;
+    }
+
+    snprintf(result, DateTimeStringNumBytes, "%04d-%02d-%02dT%s:00", now.tm_year + 1900, now.tm_mon + 1, now.tm_mday, bedtime);
+
+    return true;
+}
+
 int WatchFile(const char *Path)
 {
     // This will try to call GetLastWriteTime and ReadEntireFile on Path, even if it is a directory
@@ -91,17 +108,30 @@ int WatchFile(const char *Path)
                     printf("%s\n", ParsedTimes[i]);
                 }
 
-                /*
                 TaskScheduler taskScheduler;
                 if (taskScheduler.did_succeed())
                 {
-                    //taskScheduler->add_weekly_trigger();
+                    char dateTimeString[DateTimeStringNumBytes] = {};
+                    for (short i = 0; i < WeekdayCount; i++)
+                    {
+                        if (!date_time_string(ParsedTimes[i], dateTimeString))
+                        {
+                            ShowError("[ERROR::File Watching] date_time_string couldn't get localtime\n");
+                            return 3;
+                        }
+
+                        taskScheduler.add_weekly_trigger(dateTimeString, i, "--lock");
+
+                        if (!taskScheduler.did_succeed())
+                        {
+                            return 3;
+                        }
+                    }
                 }
                 else
                 {
                     return 3;
                 }
-                */
             }
 
             FreeStringsInArray(ParsedTimes, WeekdayCount);
