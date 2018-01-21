@@ -40,7 +40,7 @@ if %RELEASE_MODE% equ 0 ( rem debug
     echo Building release...
 )
 
-set WARNINGS= /Wall /WX /wd4514 /wd4710 /wd4711 /wd4820
+set WARNINGS= /Wall /WX /wd4514 /wd4710 /wd4711 /wd4820 /wd4365
 
 if %RELEASE_MODE% equ 0 ( rem debug
     :: Unreferenced formal parameter and local variables
