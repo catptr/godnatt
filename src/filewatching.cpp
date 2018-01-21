@@ -37,6 +37,43 @@ bool date_time_string(const char *bedtime, char result[])
     return true;
 }
 
+bool date_time_string(const char *bedtime, char result[], int minuteOffset)
+{
+    time_t t = time(0);
+
+    struct tm now;
+    if (localtime_s(&now, &t) != 0)
+    {
+        return false;
+    }
+
+    snprintf(result, DateTimeStringNumBytes, "%04d-%02d-%02dT", now.tm_year + 1900, now.tm_mon + 1, now.tm_mday);
+    // 2018-01-21THH:MM:SS
+    // Hours
+    result[11] = bedtime[0];
+    result[12] = bedtime[1];
+    
+
+    result[13] = ':';
+
+    // Minutes
+    int minutes = (bedtime[3] - '0') * 10 + (bedtime[4] - '0');
+    minutes += minuteOffset;
+
+    result[14] = (char)(minutes / 10) + '0';
+    result[15] = (char)(minutes % 10) + '0';
+
+    result[16] = ':';
+
+    // Seconds
+    result[17] = '0';
+    result[18] = '0';
+
+    result[19] = '\0';
+
+    return true;
+}
+
 int WatchFile(const char *Path)
 {
     // This will try to call GetLastWriteTime and ReadEntireFile on Path, even if it is a directory
@@ -126,6 +163,14 @@ int WatchFile(const char *Path)
                         {
                             return 3;
                         }
+
+                        if (!date_time_string(ParsedTimes[i], dateTimeString, -5))
+                        {
+                            ShowError("[ERROR::File Watching] date_time_string couldn't get localtime\n");
+                            return 3;
+                        }
+
+                        taskScheduler.add_weekly_trigger(dateTimeString, i, "--notify");
                     }
                 }
                 else
