@@ -9,6 +9,7 @@
 #include <time.h>
 
 #include "common.h"
+#include "paths.h"
 #include "taskscheduler.h"
 #include "filewatching.h"
 #include "bedtimes.h"

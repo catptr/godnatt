@@ -1,6 +1,7 @@
 #include "godnatt.h"
 
 #include "common.cpp"
+#include "paths.cpp"
 #include "bedtimes.cpp"
 #include "taskscheduler.cpp"
 #include "filewatching.cpp"
@@ -25,8 +26,7 @@ int main(int argc, char *argv[])
     else
     {
         // Default to watch bedtimes file for changes
-        const char *Path = "G:\\godnatt\\bedtimes.txt";
-        return WatchFile(Path);
+        return WatchFile(paths.bedtimes);
     }
 
     return 0;
