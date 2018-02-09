@@ -32,7 +32,7 @@ bool date_time_string(const char *bedtime, char result[])
         return false;
     }
 
-    snprintf(result, DateTimeStringNumBytes, "%04d-%02d-%02dT%s:00", now.tm_year + 1900, now.tm_mon + 1, now.tm_mday, bedtime);
+    sprintf_s(result, DateTimeStringNumBytes, "%04d-%02d-%02dT%s:00", now.tm_year + 1900, now.tm_mon + 1, now.tm_mday, bedtime);
 
     return true;
 }
@@ -47,7 +47,7 @@ bool date_time_string(const char *bedtime, char result[], int minuteOffset)
         return false;
     }
 
-    snprintf(result, DateTimeStringNumBytes, "%04d-%02d-%02dT", now.tm_year + 1900, now.tm_mon + 1, now.tm_mday);
+    sprintf_s(result, DateTimeStringNumBytes, "%04d-%02d-%02dT", now.tm_year + 1900, now.tm_mon + 1, now.tm_mday);
     // 2018-01-21THH:MM:SS
     // Hours
     result[11] = bedtime[0];
