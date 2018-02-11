@@ -25,6 +25,7 @@ int main(int argc, char *argv[])
     }
     else
     {
+        // TODO: Make sure that all directories pointed to by paths exist
         // Default to watch bedtimes file for changes
         return WatchFile(paths.bedtimes);
     }
