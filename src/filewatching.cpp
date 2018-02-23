@@ -74,33 +74,9 @@ bool date_time_string(const char *bedtime, char result[], int minuteOffset)
     return true;
 }
 
-int WatchFile(const char *Path)
+int WatchFile(const char *Directory, const char *Path)
 {
-    // This will try to call GetLastWriteTime and ReadEntireFile on Path, even if it is a directory
-    char DirPath[512] = { '.', '\\', '\0' };
-    const char *LastBackslash = strrchr(Path, '\\');
-    if (LastBackslash)
-    {
-        ptrdiff_t Length = LastBackslash - Path;
-        // Path starts with a backslash, but strncpy_s won't copy 0 characters
-        if (Length == 0)
-        {
-            DirPath[0] = '\\';
-            DirPath[1] = '\0';
-        }
-        else if (Length > 0)
-        {
-            // If there was anything before the file name, copy it to DirPath
-            assert(Length < 512);
-            if (strncpy_s(DirPath, 512, Path, (size_t)Length) != 0)
-            {
-                ShowError("[ERROR::File Watching] strncpy_s failed\n");
-                return 1;
-            }
-        }
-    }
-
-    HANDLE ChangeHandle = FindFirstChangeNotificationA(DirPath, FALSE, FILE_NOTIFY_CHANGE_LAST_WRITE);
+    HANDLE ChangeHandle = FindFirstChangeNotificationA(Directory, FALSE, FILE_NOTIFY_CHANGE_LAST_WRITE);
     if (ChangeHandle == INVALID_HANDLE_VALUE)
     {
         ShowError("[ERROR::File Watching] FindFirstChangeNotification function failed: %x\n", GetLastError());

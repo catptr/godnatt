@@ -79,6 +79,6 @@ int main(int argc, char *argv[])
         }
 
         // Default to watch bedtimes file for changes
-        return WatchFile(paths.bedtimes);
+        return WatchFile(paths.directory, paths.bedtimes);
     }
 }
