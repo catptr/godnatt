@@ -17,4 +17,5 @@ public:
 
     bool did_succeed() const;
     void add_weekly_trigger(const char *start, short day, const char *arguments);
+    void clear();
 };

@@ -1,5 +1,17 @@
 #include "taskscheduler.h"
 
+static HRESULT get_root_folder(ITaskService *service, ITaskFolder **result)
+{
+    HRESULT hr = service->GetFolder(_bstr_t("\\"), result);
+    if (FAILED(hr))
+    {
+        ShowError("[ERROR::COM] Cannot get root folder pointer: %x\n", hr);
+        return hr;
+    }
+
+    return hr;
+}
+
 TaskScheduler::TaskScheduler()
 {
     this->result = initialize();
@@ -85,10 +97,9 @@ HRESULT TaskScheduler::initialize()
         if (hr == HRESULT_FROM_WIN32(ERROR_FILE_NOT_FOUND))
         {
             ITaskFolder *rootFolder = nullptr;
-            hr = service->GetFolder(_bstr_t("\\"), &rootFolder);
+            hr = get_root_folder(service, &rootFolder);
             if (FAILED(hr))
             {
-                ShowError("[ERROR::COM] Cannot get root folder pointer: %x\n", hr);
                 return hr;
             }
 
@@ -307,4 +318,77 @@ void TaskScheduler::add_weekly_trigger(const char *start, short day, const char 
     }
 
     task->Release();
+}
+
+void TaskScheduler::clear()
+{
+    IRegisteredTaskCollection *tasks = nullptr;
+    this->result = this->godnattFolder->GetTasks(0, &tasks);
+    if (FAILED(this->result))
+    {
+        ShowError("[ERROR::COM] Error getting tasks to delete: %x\n", this->result);
+        return;
+    }
+
+    long numTasks = 0;
+    this->result = tasks->get_Count(&numTasks);
+    if (FAILED(this->result))
+    {
+        ShowError("[ERROR::COM] Error getting tasks count: %x\n", this->result);
+        tasks->Release();
+        return;
+    }
+
+    for (long i = 1; i <= numTasks; i++)
+    {
+        IRegisteredTask *task = nullptr;
+        this->result = tasks->get_Item(_variant_t(i), &task);
+        if (FAILED(this->result))
+        {
+            ShowError("[ERROR::COM] Error getting task %ld: %x\n", i, this->result);
+            tasks->Release();
+            return;
+        }
+
+        BSTR name;
+        this->result = task->get_Name(&name);
+        if (FAILED(this->result))
+        {
+            ShowError("[ERROR::COM] Error getting task %ld name: %x\n", i, this->result);
+            tasks->Release();
+            task->Release();
+            return;
+        }
+
+        task->Release();
+
+        this->godnattFolder->DeleteTask(name, 0);
+        if (FAILED(this->result))
+        {
+            ShowError("[ERROR::COM] Error deleting task %ld: %x\n", i, this->result);
+            tasks->Release();
+            return;
+        }
+    }
+
+    tasks->Release();
+
+    ITaskFolder *rootFolder = nullptr;
+    this->result = get_root_folder(this->service, &rootFolder);
+    if (FAILED(this->result))
+    {
+        return;
+    }
+
+#ifdef DEBUG
+    this->result = rootFolder->DeleteFolder(_bstr_t("godnatt_debug"), 0);
+#else
+    this->result = rootFolder->DeleteFolder(_bstr_t("godnatt"), 0);
+#endif
+    rootFolder->Release();
+    if (FAILED(this->result))
+    {
+        ShowError("[ERROR::COM] Error deleting folder: %x\n", this->result);
+        return;
+    }
 }

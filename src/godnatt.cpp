@@ -38,6 +38,21 @@ int main(int argc, char *argv[])
         {
             ShowError("Computer will get locked in 5 minutes.\nSave your work so you don't lose any!");
         }
+        else if (strcmp(argv[1], "--clear") == 0)
+        {
+            TaskScheduler ts;
+            if (!ts.did_succeed())
+            {
+                return 1;
+            }
+
+            ts.clear();
+
+            if (!ts.did_succeed())
+            {
+                return 1;
+            }
+        }
     }
     else
     {
@@ -85,4 +100,6 @@ int main(int argc, char *argv[])
         // Default to watch bedtimes file for changes
         return WatchFile(paths.directory, paths.bedtimes);
     }
+
+    return 0;
 }
