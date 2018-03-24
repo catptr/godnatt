@@ -1,7 +1,3 @@
-// Next up, add --install flag to copy exe to paths.directory and autostart?
-// After that, put the bedtimes entries in different directory in task scheduler
-// And add convenience function for enabling/disabling all of them?
-
 #include "godnatt.h"
 
 #include "common.cpp"
@@ -80,6 +76,12 @@ int main(int argc, char *argv[])
             // Close process and thread handles.
             CloseHandle(pi.hProcess);
             CloseHandle(pi.hThread);
+        }
+        else if (strcmp(argv[1], "--install") == 0)
+        {
+            // Kill godnatt.exe then copy from debug to release dirs
+            // Maybe make sure there's a shortcut in autostart?
+            ShowError("Not implemented.");
         }
     }
     else
