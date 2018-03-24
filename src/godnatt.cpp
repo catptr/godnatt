@@ -1,5 +1,3 @@
-// TODO: Run tasks even if not plugged in
-
 // TODO: Add --edit command to open bedtimes file
 
 // Next up, add --install flag to copy exe to paths.directory and autostart?

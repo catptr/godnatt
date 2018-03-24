@@ -174,6 +174,33 @@ void TaskScheduler::add_weekly_trigger(const char *start, short day, const char 
         return;
     }
 
+    ITaskSettings *settings = nullptr;
+    this->result = task->get_Settings(&settings);
+    if (FAILED(this->result))
+    {
+        ShowError("[ERROR::COM] Cannot get settings pointer: %x\n", this->result);
+        task->Release();
+        return;
+    }
+
+    this->result = settings->put_DisallowStartIfOnBatteries(_variant_t(false));
+    if (FAILED(this->result))
+    {
+        ShowError("[ERROR::COM] Cannot put power settings: %x\n", this->result);
+        task->Release();
+        settings->Release();
+        return;
+    }
+
+    this->result = settings->put_StopIfGoingOnBatteries(_variant_t(false));
+    settings->Release();
+    if (FAILED(this->result))
+    {
+        ShowError("[ERROR::COM] Cannot put power settings: %x\n", this->result);
+        task->Release();
+        return;
+    }
+
     IRegistrationInfo *regInfo = nullptr;
     this->result = task->get_RegistrationInfo(&regInfo);
     if (FAILED(this->result))
