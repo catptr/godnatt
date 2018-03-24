@@ -1,5 +1,3 @@
-// TODO: Add --edit command to open bedtimes file
-
 // Next up, add --install flag to copy exe to paths.directory and autostart?
 // After that, put the bedtimes entries in different directory in task scheduler
 // And add convenience function for enabling/disabling all of them?
@@ -50,6 +48,38 @@ int main(int argc, char *argv[])
             {
                 return 1;
             }
+        }
+        else if (strcmp(argv[1], "--edit") == 0)
+        {
+            STARTUPINFO si = {};
+            PROCESS_INFORMATION pi = {};
+            si.cb = sizeof(si);
+
+            // cast away constness so CreateProcess isn't sad
+            char *cmd = (char *)concat_path("notepad.exe ", paths.bedtimes);
+
+            if (!CreateProcessA(nullptr,
+                cmd,
+                nullptr,
+                nullptr,
+                false,
+                0,
+                nullptr,
+                nullptr,
+                &si,
+                &pi)
+            )
+            {
+                free(cmd);
+                ShowError("[ERROR::Edit] CreateProcess failed (%d).\n", GetLastError());
+                return 1;
+            }
+
+            free(cmd);
+
+            // Close process and thread handles.
+            CloseHandle(pi.hProcess);
+            CloseHandle(pi.hThread);
         }
     }
     else
