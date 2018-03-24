@@ -125,7 +125,9 @@ void TaskScheduler::add_weekly_trigger(const char *start, short day, const char 
     assert(this->did_succeed());
     assert(day >= 0 && day <= 6);
 
-    const char *executablePath = "G:\\godnatt\\bin\\godnatt.exe";
+    // TODO: get this from paths struct
+    //const char *executablePath = "G:\\godnatt\\bin\\godnatt.exe";
+    const char *executablePath = "C:\\Users\\Viktor\\AppData\\Roaming\\godnatt\\godnatt.exe";
 
     char taskName[256] = {};
     if (strcpy_s(taskName, 256, weekdayToString[day]) != 0)
