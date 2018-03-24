@@ -74,7 +74,12 @@ HRESULT TaskScheduler::initialize()
     }
 
     this->godnattFolder = nullptr;
+#ifdef DEBUG
+    hr = service->GetFolder(_bstr_t("\\godnatt_debug"), &this->godnattFolder);
+#else
     hr = service->GetFolder(_bstr_t("\\godnatt"), &this->godnattFolder);
+#endif
+    
     if (FAILED(hr))
     {
         if (hr == HRESULT_FROM_WIN32(ERROR_FILE_NOT_FOUND))
@@ -87,7 +92,11 @@ HRESULT TaskScheduler::initialize()
                 return hr;
             }
 
+#ifdef DEBUG
+            hr = rootFolder->CreateFolder(_bstr_t("godnatt_debug"), _variant_t(), &this->godnattFolder);
+#else
             hr = rootFolder->CreateFolder(_bstr_t("godnatt"), _variant_t(), &this->godnattFolder);
+#endif
             rootFolder->Release();
             if (FAILED(hr))
             {
@@ -125,9 +134,7 @@ void TaskScheduler::add_weekly_trigger(const char *start, short day, const char 
     assert(this->did_succeed());
     assert(day >= 0 && day <= 6);
 
-    // TODO: get this from paths struct
-    //const char *executablePath = "G:\\godnatt\\bin\\godnatt.exe";
-    const char *executablePath = "C:\\Users\\Viktor\\AppData\\Roaming\\godnatt\\godnatt.exe";
+    const char *executablePath = paths.executable;
 
     char taskName[256] = {};
     if (strcpy_s(taskName, 256, weekdayToString[day]) != 0)

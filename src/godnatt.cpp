@@ -1,5 +1,7 @@
 // TODO: Run tasks even if not plugged in
 
+// TODO: Add --edit command to open bedtimes file
+
 // Next up, add --install flag to copy exe to paths.directory and autostart?
 // After that, put the bedtimes entries in different directory in task scheduler
 // And add convenience function for enabling/disabling all of them?

@@ -147,6 +147,11 @@ int WatchFile(const char *Directory, const char *Path)
                         }
 
                         taskScheduler.add_weekly_trigger(dateTimeString, i, "--notify");
+
+                        if (!taskScheduler.did_succeed())
+                        {
+                            return 3;
+                        }
                     }
                 }
                 else

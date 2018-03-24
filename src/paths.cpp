@@ -33,6 +33,7 @@ Paths::Paths()
 
     this->bedtimes = concat_path(this->directory, "bedtimes.txt");
     this->lastUpdate = concat_path(this->directory, "last_update");
+    this->executable = concat_path(this->directory, "godnatt.exe");
 }
 
 Paths paths;
